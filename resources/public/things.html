@@ -1,0 +1,51 @@
+<html>
+<head>
+    <title>Things</title></head>
+<script language="javascript">
+    <!--
+    function createRequest() {
+    var result = null;
+    if (window.XMLHttpRequest) {
+    	result = new XMLHttpRequest();
+	if (typeof result.overrideMimeType != 'undefined') {
+		result.overrideMimeType('text/xml');
+    	}
+    }
+    else if (window.ActiveXObject) {
+	    result = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    else {
+
+    }
+    return result;
+}
+
+    function sendThing() {
+        var req = createRequest();
+
+req.onreadystatechange = function() {
+  if (req.readyState != 4) return;
+  if (req.status != 200 && req.status!=201) {
+    alert("error: " + req.status);
+    return;
+  }
+  var resp = req.responseText;
+  alert("DONE: " + resp);
+};
+
+        req.open("POST", 'http://localhost:9998/things/thing', true);
+        req.setRequestHeader("Content-Type",
+                     "application/json");
+                     var thing = {};
+                     thing.url = "http://things.notatoaster.org";
+                     var json = JSON.stringify(thing);
+            req.send(json);
+    }
+
+    // -->
+</script>
+<body>
+<iframe src="http://localhost:3000/things/list.html" width="500" height="400" id="thinglist"></iframe>
+<button onclick="sendThing();">Send!</button>
+</body>
+</html>
