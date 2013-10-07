@@ -20,8 +20,9 @@
 (defn insert-thing
   [thing]
   (let [id (ObjectId.)]
-    (mc/insert things-collection (assoc thing :_id id :created (str (Date.)) :tags (split-tags (:tags thing))))
-    (str "Created: " id)))
+    ;; (mc/insert things-collection (assoc thing :_id id :created (str (Date.)) :tags (split-tags (:tags thing))))
+    (mc/insert things-collection (assoc (update-in thing [:tags] split-tags) :_id id :created (str (Date.))))
+    (str "alert('Created: " id "');")))
 
 (defn get-thing [thing-id]
   (str (mc/find-map-by-id things-collection (ObjectId. thing-id))))
