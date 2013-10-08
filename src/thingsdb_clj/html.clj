@@ -6,3 +6,9 @@
 
 (defn listpage [title list]
   (str "<html><head><title>" title "</title></head><body><ul>" (join (map listitem list)) "</ul></body></html>"))
+
+(defn tagitem [tag]
+  (str "<li>" (:_id tag) " #=> " (get-in tag [:value :count]) "</li>"))
+
+(defn tagpage [title tags]
+  (str "<html><head><title>" title "</title></head><body><ul>" (join (map tagitem (sort-by #(get-in % [:value :count]) > tags))) "</ul></body></html>"))

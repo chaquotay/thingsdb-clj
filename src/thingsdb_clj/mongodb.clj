@@ -1,9 +1,10 @@
 (ns thingsdb-clj.mongodb
-  (:use [clojure.string :only [split blank?]])
+  (:use [clojure.string :only [split blank?]]
+        [monger.conversion :only [from-db-object]])
   (:require [monger.core :as mg]
             [monger.collection :as mc])
   (:import [org.bson.types ObjectId]
-           [com.mongodb DB WriteConcern]
+           [com.mongodb DB WriteConcern MapReduceCommand$OutputType MapReduceOutput DBObject]
            [java.util Date])
   )
 
@@ -34,3 +35,26 @@
   (mc/update-by-id things-collection (ObjectId. thing-id) thing))
 
 (defn get-all-things [] (mc/find-maps things-collection))
+
+(def tag-map "function Map() {
+	if(this.tags) {
+		for(var i=0; i<this.tags.length; i++) {
+			var tag = this.tags[i];
+			emit(tag, {things: [this], count: 1});
+		}
+	}
+}")
+
+(def tag-reduce "function Reduce(key, values) {
+	var reduced = {things:[], count: 0};
+
+	values.forEach(function(val) {
+		reduced.things.push(val.things[0]);
+		reduced.count++;
+	});
+
+	return reduced;
+}")
+
+(defn get-all-tags []
+  (from-db-object (.results (mc/map-reduce things-collection tag-map tag-reduce nil MapReduceCommand$OutputType/INLINE {})) true))
