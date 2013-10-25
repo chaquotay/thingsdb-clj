@@ -58,3 +58,6 @@
 
 (defn get-all-tags []
   (from-db-object (.results (mc/map-reduce things-collection tag-map tag-reduce nil MapReduceCommand$OutputType/INLINE {})) true))
+
+(defn get-things-by-tag [tag]
+  (mc/find-maps things-collection {:tags tag}))

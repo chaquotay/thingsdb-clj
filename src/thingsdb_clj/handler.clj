@@ -17,9 +17,10 @@
                                                        (PUT    "/" {body :body} (update-thing id body))
                                                        (DELETE "/" [] (remove-thing id))))))
   (context "/pages" [] (defroutes things-routes
-                         (GET  "/things.html" [] (listpage "Things" (filter :url (get-all-things))))
-                         (GET  "/tags.html" [] (tagpage "Tags" (get-all-tags)))
-                         (GET  "/index.html" [] (resp/resource-response "things.html" {:root "public"}))))
+                         (GET  "/things" [] (listpage (filter :url (get-all-things))))
+                         (GET  "/tags" [] (tagpage (get-all-tags)))
+                         (GET  "/tags/:tag" [tag] (listpage (filter :url (get-things-by-tag tag))))))
+  (route/resources "/")
   (route/not-found "Not Found"))
 
 (def app
